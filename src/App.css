@@ -16,3 +16,39 @@
 .date {
 	color: #827e7e;
 }
+
+.search__page {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	justify-content: space-between;
+	align-items: center;
+	height: 100%;
+}
+
+.average-rate {
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	border: 2px solid;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 0.9em;
+}
+
+.average-rate.worst {
+	border-color: #e90000;
+}
+
+.average-rate.bad {
+	border-color: #e97e00;
+}
+
+.average-rate.good {
+	border-color: #e9d100;
+}
+
+.average-rate.best {
+	border-color: #66e900;
+}
