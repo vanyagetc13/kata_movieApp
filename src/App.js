@@ -25,9 +25,7 @@ class App extends React.Component {
 		this.setState((prev) => ({
 			...prev,
 			error: err,
-			loading: false,
-			results: null,
-			lastQuery: str ? str : this.state.lastQuery,
+			lastQuery: str ? str : prev.lastQuery,
 		}))
 	}
 
@@ -61,6 +59,15 @@ class App extends React.Component {
 	changeRateByID = (id, newRate) => {
 		movieService
 			.setMovieRateById(id, newRate)
+			.then(() => {
+				this.updateRatedMovies()
+			})
+			.catch(this.errorCatcher)
+	}
+
+	deleteRateByID = (id) => {
+		movieService
+			.deleteMovieRateByID(id)
 			.then(() => {
 				this.updateRatedMovies()
 			})
@@ -128,10 +135,20 @@ class App extends React.Component {
 
 	updateRatedMovies = () => {
 		this.setState((prev) => ({ ...prev, ratedLoading: true, ratedMovies: [] }))
-		movieService.getRatedMovies().then((res) => {
-			this.setState((prev) => ({ ...prev, ratedLoading: false, ratedMovies: res.results }))
-		})
-
+		movieService
+			.getRatedMovies()
+			.then((res) => {
+				this.setState((prev) => ({ ...prev, ratedLoading: false, ratedMovies: res.results }))
+			})
+			.catch((err) => {
+				this.setState((prev) => ({
+					...prev,
+					ratedLoading: false,
+					guestSessionValid: 'rejected',
+					error: err,
+				}))
+				this.errorCatcher(err)
+			})
 		// Только если total_pages = 1
 	}
 
@@ -159,6 +176,7 @@ class App extends React.Component {
 						ratedLoading={this.state.ratedLoading}
 						totalMovies={this.state.totalMovies}
 						changeRate={this.changeRateByID}
+						deleteRate={this.deleteRateByID}
 					/>
 				),
 			},
@@ -168,6 +186,7 @@ class App extends React.Component {
 				children: (
 					<RatedPage
 						changeRate={this.changeRateByID}
+						deleteRate={this.deleteRateByID}
 						ratedMovies={this.state.ratedMovies}
 						ratedLoading={this.state.ratedLoading}
 					/>

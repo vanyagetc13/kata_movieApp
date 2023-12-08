@@ -2,15 +2,17 @@ import { Rate } from 'antd'
 import React from 'react'
 import Spiner from './Spiner'
 
-const RateCustom = ({ movie, changeRate, ratedLoading }) => {
-	if (ratedLoading) return <Spiner />
+const RateCustom = ({ movie, changeRate, ratedLoading, deleteRate }) => {
+	if (ratedLoading) return <Spiner size="small" />
 	return (
 		<Rate
 			count={10}
 			allowHalf
 			value={movie.rating}
 			onChange={(newRate) => {
-				changeRate(movie.id, newRate)
+				console.log(newRate, movie.rating)
+				if (newRate !== 0) changeRate(movie.id, newRate)
+				else deleteRate(movie.id)
 			}}
 		/>
 	)

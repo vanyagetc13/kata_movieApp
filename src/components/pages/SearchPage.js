@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import React from 'react'
 import { debounce } from 'lodash'
 import { Alert, Pagination } from 'antd'
@@ -36,16 +37,21 @@ class SearchPage extends React.Component {
 						data={getRatedMovies(this.props.results, this.props.ratedMovies)}
 						ratedLoading={this.props.ratedLoading}
 						changeRate={this.props.changeRate}
+						deleteRate={this.props.deleteRate}
 					/>
 				)}
-				{(guestSessionPending || this.props.loading) && <Spiner />}
-				{guestSessionFulfilled && !this.props.loading && !this.props.results?.length && !this.props.error && (
-					<Alert
-						message="Type to search."
-						description="Type to search a movie in the input-field below."
-						type="info"
-					/>
-				)}
+				{(guestSessionPending || this.props.loading || this.props.ratedLoading) && <Spiner />}
+				{guestSessionFulfilled &&
+					!this.props.loading &&
+					!this.props.ratedLoading &&
+					!this.props.results?.length &&
+					!this.props.error && (
+						<Alert
+							message="Type to search."
+							description="Type to search a movie in the input-field below."
+							type="info"
+						/>
+					)}
 				<Pagination
 					onChange={this.props.getMoviesByPage}
 					defaultCurrent={1}

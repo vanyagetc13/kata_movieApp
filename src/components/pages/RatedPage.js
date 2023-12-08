@@ -4,8 +4,8 @@ import MovieList from '../MovieList'
 
 class RatedPage extends React.Component {
 	render() {
-		const { ratedLoading, ratedMovies, changeRate } = this.props
-		if (!ratedLoading) return <MovieList data={ratedMovies} changeRate={changeRate} />
+		const { ratedLoading, ratedMovies, changeRate, deleteRate } = this.props
+		if (!ratedLoading) return <MovieList data={ratedMovies} changeRate={changeRate} deleteRate={deleteRate} />
 		return <Spiner />
 	}
 }

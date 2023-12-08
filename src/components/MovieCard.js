@@ -68,6 +68,7 @@ export default class MovieCard extends React.Component {
 								changeRate={this.props.changeRate}
 								key="rate"
 								ratedLoading={this.props.ratedLoading}
+								deleteRate={this.props.deleteRate}
 							/>,
 						]}
 					>

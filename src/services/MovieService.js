@@ -52,18 +52,24 @@ class MovieService {
 
 	setMovieRateById(movieID, newRate) {
 		const sessionID = JSON.parse(localStorage.getItem('guestSessionID'))
-		return fetch(
-			this.baseURL +
-				`/movie/${movieID}/rating?api_key=${this.api_key}&guest_session_id=${sessionID}&api_key=${this.api_key}`,
-			{
-				method: 'POST',
-				body: JSON.stringify({ value: newRate }),
-				headers: {
-					accept: 'application/json',
-					'Content-Type': 'application/json;charset=utf-8',
-				},
-			}
-		).then((res) => res.json())
+		return fetch(this.baseURL + `/movie/${movieID}/rating?api_key=${this.api_key}&guest_session_id=${sessionID}`, {
+			method: 'POST',
+			body: JSON.stringify({ value: newRate }),
+			headers: {
+				accept: 'application/json',
+				'Content-Type': 'application/json;charset=utf-8',
+			},
+		}).then((res) => res.json())
+	}
+	deleteMovieRateByID(movieID) {
+		const sessionID = JSON.parse(localStorage.getItem('guestSessionID'))
+		return fetch(this.baseURL + `/movie/${movieID}/rating?api_key=${this.api_key}&guest_session_id=${sessionID}`, {
+			method: 'DELETE',
+			headers: {
+				accept: 'application/json',
+				'Content-Type': 'application/json;charset=utf-8',
+			},
+		}).then(console.log)
 	}
 }
 
