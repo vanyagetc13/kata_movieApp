@@ -31,7 +31,7 @@ class SearchPage extends React.Component {
 						type="error"
 					/>
 				)}
-				{this.props.error && <Alert message={this.props.error.message} type="error" />}
+				{this.props.error && !this.props.loading && <Alert message={this.props.error.message} type="error" />}
 				{guestSessionFulfilled && this.props.results && !this.props.loading && (
 					<MovieList
 						data={getRatedMovies(this.props.results, this.props.ratedMovies)}
