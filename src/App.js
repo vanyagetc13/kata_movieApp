@@ -53,6 +53,7 @@ class App extends React.Component {
 			})
 			.catch((err) => {
 				this.errorCatcher(err, str)
+				this.setState((prev) => ({ ...prev, loading: false }))
 			})
 	}
 
@@ -107,7 +108,10 @@ class App extends React.Component {
 					loading: false,
 				}))
 			})
-			.catch(this.errorCatcher)
+			.catch((err) => {
+				this.errorCatcher(err)
+				this.setState((prev) => ({ ...prev, loading: false }))
+			})
 	}
 
 	getSessionID() {

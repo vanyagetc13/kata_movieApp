@@ -40,7 +40,9 @@ class SearchPage extends React.Component {
 						deleteRate={this.props.deleteRate}
 					/>
 				)}
-				{(guestSessionPending || this.props.loading || this.props.ratedLoading) && <Spiner />}
+				{(guestSessionPending || this.props.loading || this.props.ratedLoading) && !this.props.error && (
+					<Spiner />
+				)}
 				{guestSessionFulfilled &&
 					!this.props.loading &&
 					!this.props.ratedLoading &&
