@@ -46,6 +46,10 @@
 	font-size: 0.9em;
 }
 
+.rate-spiner {
+	height: 20px;
+}
+
 .average-rate.worst {
 	border-color: #e90000;
 }

@@ -57,8 +57,32 @@ class App extends React.Component {
 			})
 	}
 
+	setLoadingStateToMovieByID = (id) => {
+		let index = -1
+		this.setState((prev) => {
+			index = prev.ratedMovies.findIndex((movie) => movie.id === id)
+			if (index === -1) {
+				index = prev.results.findIndex((movie) => movie.id === id)
+				const newResults = [...prev.results]
+				const newRatedMovie = { ...prev.results[index], loading: true }
+				newResults.splice(index, 1, newRatedMovie)
+				return {
+					...prev,
+					results: newResults,
+					ratedMovies: [...prev.ratedMovies, newRatedMovie],
+				}
+			}
+			const newRatedMovies = [...prev.ratedMovies]
+			newRatedMovies.splice(index, 1, { ...prev.ratedMovies[index], loading: true })
+			return {
+				...prev,
+				ratedMovies: newRatedMovies,
+			}
+		})
+	}
+
 	changeRateByID = (id, newRate) => {
-		this.setState((prev) => ({ ...prev, ratedLoading: true }))
+		this.setLoadingStateToMovieByID(id)
 		movieService
 			.setMovieRateById(id, newRate)
 			.then(() => {
@@ -68,7 +92,7 @@ class App extends React.Component {
 	}
 
 	deleteRateByID = (id) => {
-		this.setState((prev) => ({ ...prev, ratedLoading: true }))
+		this.setLoadingStateToMovieByID(id)
 		movieService
 			.deleteMovieRateByID(id)
 			.then(() => {
@@ -80,14 +104,17 @@ class App extends React.Component {
 	updateRatedMovieStateByID = (id, newRate = 0) => {
 		this.setState((prev) => {
 			const index = prev.ratedMovies.findIndex((movie) => movie.id === id)
-			if (index === -1) return
 			const newRatedMovies = [...prev.ratedMovies]
-			const newMovie = { ...prev.ratedMovies[index], rating: newRate }
-			newRatedMovies.splice(index, 1, newMovie)
+			const newMovie = { ...prev.ratedMovies[index], rating: newRate, loading: false }
+			if (newRate) newRatedMovies.splice(index, 1, newMovie)
+			else newRatedMovies.splice(index, 1)
+			const idx = prev.results.findIndex((movie) => movie.id === id)
+			const newResults = [...prev.results]
+			if (idx !== -1) newResults.splice(idx, 1, { ...prev.results[idx], loading: false, rating: newRate })
 			return {
 				...prev,
 				ratedMovies: newRatedMovies,
-				ratedLoading: false,
+				results: newResults,
 			}
 		})
 	}
@@ -154,22 +181,37 @@ class App extends React.Component {
 	}
 
 	updateRatedMovies = () => {
+		const errCatcher = (err) => {
+			this.setState((prev) => ({
+				...prev,
+				ratedLoading: false,
+				guestSessionValid: 'rejected',
+				error: err,
+			}))
+			this.errorCatcher(err)
+		}
 		this.setState((prev) => ({ ...prev, ratedLoading: true, ratedMovies: [] }))
 		// setTimeout(() => {
 		movieService
 			.getRatedMovies()
-			.then((res) => {
-				this.setState((prev) => ({ ...prev, ratedLoading: false, ratedMovies: res.results }))
+			.then(async (res) => {
+				console.log(res)
+				const results = [...res.results]
+				for (let page = 2; page <= res.total_pages; page++) {
+					await movieService.getRatedMovies(page).then((res) => {
+						results.push(...res.results)
+					})
+				}
+				return results
 			})
-			.catch((err) => {
+			.then((results) => {
 				this.setState((prev) => ({
 					...prev,
+					ratedMovies: results.map((movie) => ({ ...movie, loading: false })),
 					ratedLoading: false,
-					guestSessionValid: 'rejected',
-					error: err,
 				}))
-				this.errorCatcher(err)
 			})
+			.catch(errCatcher)
 		// }, 1000) // Из-за внутренних задержек, севрер отправляет неизмененные данные.
 
 		// Только если total_pages = 1
@@ -224,9 +266,7 @@ class App extends React.Component {
 					style={{ width: '100%', height: '100%', minHeight: 'inherit' }}
 					defaultActiveKey="1"
 					items={tabs}
-					onChange={() => {
-						this.updateRatedMovies()
-					}}
+					// onChange={throttle(this.updateRatedMovies, 5000)}
 					// destroyInactiveTabPane
 				/>
 			</GenresProvider>

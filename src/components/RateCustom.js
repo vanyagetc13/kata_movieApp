@@ -1,9 +1,8 @@
-import { Rate } from 'antd'
 import React from 'react'
-import Spiner from './Spiner'
+import { Rate, Spin } from 'antd'
 
 const RateCustom = ({ movie, changeRate, ratedLoading, deleteRate }) => {
-	if (ratedLoading) return <Spiner size="small" />
+	if (ratedLoading | movie.loading) return <Spin size="small" wrapperClassName="rate-spiner" />
 	return (
 		<Rate
 			count={10}

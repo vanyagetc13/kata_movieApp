@@ -60,7 +60,7 @@ class SearchPage extends React.Component {
 					pageSize={20}
 					showSizeChanger={false}
 					total={this.props.totalMovies}
-					style={{ textAlign: 'center', padding: 15 }}
+					style={{ textAlign: 'center' }}
 				/>
 			</section>
 		)
