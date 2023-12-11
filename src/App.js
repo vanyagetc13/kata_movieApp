@@ -57,21 +57,39 @@ class App extends React.Component {
 	}
 
 	changeRateByID = (id, newRate) => {
+		this.setState((prev) => ({ ...prev, ratedLoading: true }))
 		movieService
 			.setMovieRateById(id, newRate)
 			.then(() => {
-				this.updateRatedMovies()
+				this.updateRatedMovieStateByID(id, newRate)
 			})
 			.catch(this.errorCatcher)
 	}
 
 	deleteRateByID = (id) => {
+		this.setState((prev) => ({ ...prev, ratedLoading: true }))
 		movieService
 			.deleteMovieRateByID(id)
 			.then(() => {
-				this.updateRatedMovies()
+				this.updateRatedMovieStateByID(id)
 			})
 			.catch(this.errorCatcher)
+	}
+
+	updateRatedMovieStateByID = (id, newRate = 0) => {
+		this.setState((prev) => {
+			const index = prev.ratedMovies.findIndex((movie) => movie.id === id)
+			if (index === -1) return
+			const newRatedMovies = [...prev.ratedMovies]
+			const newMovie = { ...prev.ratedMovies[index], rating: newRate }
+			newRatedMovies.splice(index, 1, newMovie)
+			console.log(newRatedMovies)
+			return {
+				...prev,
+				ratedMovies: newRatedMovies,
+				ratedLoading: false,
+			}
+		})
 	}
 
 	getMoviesByPage = (page) => {
@@ -112,7 +130,6 @@ class App extends React.Component {
 					this.setState((prev) => ({ ...prev, guestSessionValid: 'rejected', error: err }))
 				})
 		else sessionID = parsed
-		localStorage.setItem('guestSessionID', JSON.stringify(sessionID))
 		this.updateRatedMovies()
 		this.setState((prev) => ({
 			...prev,
@@ -135,6 +152,7 @@ class App extends React.Component {
 
 	updateRatedMovies = () => {
 		this.setState((prev) => ({ ...prev, ratedLoading: true, ratedMovies: [] }))
+		// setTimeout(() => {
 		movieService
 			.getRatedMovies()
 			.then((res) => {
@@ -149,6 +167,8 @@ class App extends React.Component {
 				}))
 				this.errorCatcher(err)
 			})
+		// }, 1000) // Из-за внутренних задержек, севрер отправляет неизмененные данные.
+
 		// Только если total_pages = 1
 	}
 
@@ -201,7 +221,10 @@ class App extends React.Component {
 					style={{ width: '100%', height: '100%', minHeight: 'inherit' }}
 					defaultActiveKey="1"
 					items={tabs}
-					destroyInactiveTabPane
+					onChange={() => {
+						this.updateRatedMovies()
+					}}
+					// destroyInactiveTabPane
 				/>
 			</GenresProvider>
 		)

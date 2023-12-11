@@ -8,7 +8,7 @@ import RateCustom from './RateCustom'
 const previewImageUrl = 'https://image.tmdb.org/t/p/w500/'
 const fallbackImageUrl = 'https://deichman.no/api/images/resize/800/cover-images/1677149663144745634a459dee9182d.jpg'
 
-const PreviewImage = ({ url: path, preview = false }) => {
+const PreviewImage = ({ url: path, width = 180, preview = false }) => {
 	if (!path) return <Image preview={preview} src={fallbackImageUrl} alt="poster" style={{ width: 180 }}></Image>
 	return (
 		<Image
@@ -16,7 +16,7 @@ const PreviewImage = ({ url: path, preview = false }) => {
 			src={previewImageUrl + path}
 			fallback={fallbackImageUrl}
 			alt="poster"
-			style={{ width: 180 }}
+			style={{ width: width }}
 		/>
 	)
 }
@@ -35,10 +35,12 @@ const getFormatedDate = (dateString) => {
 
 export default class MovieCard extends React.Component {
 	render() {
+		const { innerWidth } = window
+		const isMobile = innerWidth < 1024
 		const { movie } = this.props
 		return (
 			<Flex className="card">
-				<PreviewImage url={movie.poster_path} />
+				<PreviewImage url={movie.poster_path} width={isMobile ? 108 : 180} />
 				<ConfigProvider
 					theme={{
 						token: {
@@ -59,9 +61,16 @@ export default class MovieCard extends React.Component {
 							display: 'flex',
 							gap: '5px',
 							flexDirection: 'column',
+							justifySelf: 'center',
 						}}
 						extra={<AverageRate average={movie.vote_average} />}
-						style={{ width: 280 }}
+						style={{
+							width: 280,
+							display: 'flex',
+							flexDirection: 'column',
+							justifyContent: 'space-between',
+							boxShadow: 'none',
+						}}
 						actions={[
 							<RateCustom
 								movie={movie}

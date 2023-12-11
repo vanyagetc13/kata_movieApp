@@ -69,7 +69,7 @@ class MovieService {
 				accept: 'application/json',
 				'Content-Type': 'application/json;charset=utf-8',
 			},
-		}).then(console.log)
+		})
 	}
 }
 
