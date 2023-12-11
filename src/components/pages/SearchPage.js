@@ -13,7 +13,7 @@ class SearchPage extends React.Component {
 		const guestSessionPending = this.props.guestSessionValid === 'pending'
 		const getRatedMovies = (data, ratedMovies) => {
 			return data.map((movie) => {
-				const ratedMovie = ratedMovies.find((ratedMovie) => ratedMovie.id === movie.id)
+				const ratedMovie = ratedMovies?.find((ratedMovie) => ratedMovie.id === movie.id)
 				if (!ratedMovie) return movie
 				else return ratedMovie
 			})

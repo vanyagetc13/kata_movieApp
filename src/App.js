@@ -83,7 +83,6 @@ class App extends React.Component {
 			const newRatedMovies = [...prev.ratedMovies]
 			const newMovie = { ...prev.ratedMovies[index], rating: newRate }
 			newRatedMovies.splice(index, 1, newMovie)
-			console.log(newRatedMovies)
 			return {
 				...prev,
 				ratedMovies: newRatedMovies,
