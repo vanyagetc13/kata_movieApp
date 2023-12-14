@@ -19,7 +19,7 @@ class SearchPage extends React.Component {
 			})
 		}
 		return (
-			<section className="search__page">
+			<section className="page">
 				<SearchInput
 					disabled={guestSessionFulfilled}
 					getMoviesByQuery={debounce(this.props.getMoviesByQuery, 700)}

@@ -3,7 +3,6 @@
 	box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.15);
 	width: 460px;
 }
-
 .genre {
 	font-size: 0.75em;
 	padding: 2px 5px;
@@ -17,7 +16,7 @@
 	color: #827e7e;
 }
 
-.search__page {
+.page {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
@@ -47,7 +46,7 @@
 }
 
 .rate-spiner {
-	height: 20px;
+	height: 34px;
 }
 
 .average-rate.worst {

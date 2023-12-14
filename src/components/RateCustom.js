@@ -2,7 +2,7 @@ import React from 'react'
 import { Rate, Spin } from 'antd'
 
 const RateCustom = ({ movie, changeRate, ratedLoading, deleteRate }) => {
-	if (ratedLoading | movie.loading) return <Spin size="small" wrapperClassName="rate-spiner" />
+	if (ratedLoading | movie.loading) return <Spin style={{ height: 23 }} />
 	return (
 		<Rate
 			count={10}
