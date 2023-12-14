@@ -24,15 +24,14 @@ body {
 	padding: 50px;
 }
 
-@media screen and (max-width: 1090px) {
+@media screen and (max-width: 1089px) {
 	#root {
 		width: 100%;
-		margin: 0;
-		padding: 5px 16px;
+		padding: 5px 8px;
 	}
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1023px) {
 	#root {
 		width: 100%;
 		max-width: 100%;
